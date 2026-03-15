@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { db, auth } from "../FirebaseConnection"
 import {collection, doc, addDoc, getDocs, updateDoc, deleteDoc} from "firebase/firestore"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
 
 function App() {
   const [post, setPost] = useState({
@@ -12,6 +12,8 @@ function App() {
   const[id, setId] = useState("")
   const[email, setEmail] = useState("")
   const[senha, setSenha] = useState("")
+  const[user, setUser] = useState(false)
+  const[detalhes, setDetalhes] = useState({})
 
   function capturarInput(e) {
     const nameInput = e.target.name
@@ -65,6 +67,25 @@ function App() {
     }
     buscarPosts()
   }, [])
+
+  useEffect(()=>{
+    async function checkLogin() {
+      onAuthStateChanged(auth, (user)=>{
+        if(user){
+          setUser(true)
+          setDetalhes({
+            uid: user.uid,
+            email: user.email
+          })
+        }else{
+          setUser(false)
+          setDetalhes({})
+        }
+      })
+    }
+    checkLogin()
+  }, [])
+
   async function editarPost() {
     const docRef = doc(db, "posts", id)
     await updateDoc(docRef, {
@@ -94,8 +115,13 @@ function App() {
   }
   async function cadastrarUsuario() {
     await createUserWithEmailAndPassword(auth, email, senha)
-    .then(()=>{
+    .then((valor)=>{
         alert("Cadastrado com Sucesso!")
+        setDetalhes({
+          uid: valor.user.uid,
+          email: valor.user.email
+        })
+        setUser(true)
         setEmail("")
         setSenha("")
     })
@@ -104,12 +130,25 @@ function App() {
       console.log("erro => " +erro)
     })
   }
+  async function sair() {
+    await signOut(auth)
+    setUser(false)
+    setDetalhes({})
+  }
 
 
   return (
     <div>
-      <h2>Autenticação</h2>
+      <h1>React & Firebase</h1>
+      { user && (
+        <div>
+          <h2>Login realizado com Sucesso!</h2>
+          <p>{detalhes.email}</p>
+          <button onClick={sair}>Sair</button>
+        </div>
+      ) }
       <div>
+        <h2>Autenticação</h2>
         <label>Email </label>
         <input type="email" onChange={(e)=> setEmail(e.target.value)} value={email} />
         <br /><br />

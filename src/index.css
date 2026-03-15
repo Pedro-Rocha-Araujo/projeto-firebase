@@ -5,5 +5,13 @@
 }
 
 body{
-  padding: 2rem;
+  padding: 1.4rem 4rem;
+}
+
+h1, h2 {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  margin: 1rem 0;
 }
