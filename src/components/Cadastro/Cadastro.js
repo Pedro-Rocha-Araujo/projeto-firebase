@@ -1,11 +1,14 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { auth } from "../../FirebaseConnection"
+import { createUserWithEmailAndPassword } from "firebase/auth"
 
 function Cadastro() {
     const [usuario, setUsuario] = useState({
         email: "",
         senha: ""
     })
+    const navigate = useNavigate()
 
     function pegarInput(e) {
         const nameInput = e.target.name
@@ -17,15 +20,22 @@ function Cadastro() {
             }
         })
     }
-    function salvarInput(e) {
+    async function salvarInput(e) {
         e.preventDefault()
-        alert("Cadastrado!")
-        setUsuario({
-            email: "",
-            senha: ""
+        await createUserWithEmailAndPassword(auth, usuario.email, usuario.senha)
+        .then(()=>{
+    
+            setUsuario({
+                email: "",
+                senha: ""
+            })
+            alert("Cadastrado!")
+            navigate("/admin", {replace: true})
+        })
+        .catch(()=>{
+            alert("Erro!")
         })
     }
-
     return(
         <div className="div-login">
             <h1>Cadastrar-se</h1>

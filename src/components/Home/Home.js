@@ -1,11 +1,14 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, replace, useNavigate } from "react-router-dom"
+import { auth } from "../../FirebaseConnection"
+import { signInWithEmailAndPassword } from "firebase/auth"
 
 function Home() {
     const [usuario, setUsuario] = useState({
         email: "",
         senha: ""
     })
+    const navigate = useNavigate()
 
     function pegarInput(e) {
         const nameInput = e.target.name
@@ -17,9 +20,16 @@ function Home() {
             }
         })
     }
-    function salvarInput(e) {
+    async function salvarInput(e) {
         e.preventDefault()
-        alert("Logado!")
+        await signInWithEmailAndPassword(auth, usuario.email, usuario.senha)
+        .then(()=>{
+            navigate("/admin", {replace: true})
+            alert("Ok!")
+        })
+        .catch(()=>{
+            alert("Erro")
+        })
         setUsuario({
             email: "",
             senha: ""
