@@ -25,7 +25,7 @@ div.div-home, div.div-login {
 h1 {
   font-size: clamp(2rem, 12vw, 3rem);
   text-align: center;
-  margin-bottom: 0.6rem;
+  margin: 2rem 0 0.6rem 0;
 }
 
 form {
@@ -38,17 +38,17 @@ form {
 
 input {
   font-size: clamp(0.9rem, 8vw, 1.08rem);
-  height: 2rem;
+  height: 2.6rem;
   width: 98%;
-  max-width: 440px;
+  max-width: 480px;
   padding: 2px 0.8rem;
 }
 
 button[type="submit"] {
   font-size: clamp(0.9rem, 8vw, 1.08rem);
   width: 98%;
-  height: 2.2rem;
-  max-width: 440px;
+  height: 2.7rem;
+  max-width: 480px;
   background-color: rgb(185, 72, 185);
   color: #fff;
 }
@@ -62,4 +62,64 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+div.admin textarea {
+  width: 98%;
+  min-height: 6rem;
+  max-width: 480px;
+  padding: 0.6rem 0.8rem;
+}
+
+
+
+
+
+
+div.admin button {
+  height: 2rem;
+}
+
+section {
+  background-color: rgba(255, 255, 255, 0.151);
+  width: 98%;
+  max-width: 480px;
+  margin: 2rem auto;
+  border-radius: 0.6rem;
+  padding: 1rem;
+}
+
+div.tarefas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div.botoes {
+  display: flex;
+  gap: 4px;
+}
+
+div.botoes button {
+  height: auto;
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.btn-editar {
+  background-color: rgb(45, 45, 255);
+}
+
+.btn-deletar {
+  background-color: rgb(255, 47, 47);
+}
+
+div.sair {
+  text-align: center;
+}
+
+div.sair p:hover{
+  text-decoration: underline;
+  cursor: pointer;
 }
