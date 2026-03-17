@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { auth, db } from "../../FirebaseConnection"
 import { signOut } from "firebase/auth"
-import { addDoc, collection, onSnapshot, query, orderBy, where } from "firebase/firestore"
+import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc } from "firebase/firestore"
 
 function Admin() {
     const [tarefa, setTarefa] = useState("")
@@ -55,7 +55,9 @@ function Admin() {
     async function editarTarefa() {
     }
 
-    async function deletarTarefa() {
+    async function deletarTarefa(id) {
+        const docRef = doc(db, "tarefas", id)
+        await deleteDoc(docRef)
     }
 
     return(
@@ -77,7 +79,7 @@ function Admin() {
                             <p>{_.tarefa}</p>
                             <div className="botoes">
                                 <button onClick={editarTarefa} className="btn-editar">Editar</button>
-                                <button onClick={deletarTarefa} className="btn-deletar">Deletar</button>
+                                <button onClick={()=>deletarTarefa(_.id)} className="btn-deletar">Deletar</button>
                             </div>
                         </div>
                     )
