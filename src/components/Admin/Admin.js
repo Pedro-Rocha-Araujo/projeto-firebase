@@ -1,17 +1,46 @@
-import { useState } from "react"
-import { auth } from "../../FirebaseConnection"
+import { useState, useEffect } from "react"
+import { auth, db } from "../../FirebaseConnection"
 import { signOut } from "firebase/auth"
+import { addDoc, collection } from "firebase/firestore"
 
 function Admin() {
     const [tarefa, setTarefa] = useState("")
-    function adcionarTarefa(e) {
+    const [user, setUser] = useState({})
+
+    useEffect(()=>{
+        async function carregarTarefas() {
+            const userDetail = localStorage.getItem("@detailUser")
+            if(userDetail){
+                setUser(JSON.parse(userDetail))
+            }
+        }
+        carregarTarefas()
+    }, [])
+
+    async function adcionarTarefa(e) {
         e.preventDefault()
+        await addDoc(collection(db, "tarefas"), {
+            tarefa: tarefa,
+            data: new Date(),
+            userUid: user?.uid
+        })
+        .then(()=>{
+            console.log("OK!")
+        })
+        .catch(()=>{
+            alert("Erro no momento do cadastro!")
+        })
         setTarefa("")
-        alert("OK!")
     }
 
     async function sairConta() {
         await signOut(auth)
+    }
+
+    async function editarTarefa() {
+    }
+
+    async function deletarTarefa() {
     }
 
     return(
@@ -30,8 +59,8 @@ function Admin() {
                 <div className="tarefas">
                     <p>Tarefa número 1</p>
                     <div className="botoes">
-                        <button className="btn-editar">Editar</button>
-                        <button className="btn-deletar">Deletar</button>
+                        <button onClick={editarTarefa} className="btn-editar">Editar</button>
+                        <button onClick={deletarTarefa} className="btn-deletar">Deletar</button>
                     </div>
                 </div>
             </section>

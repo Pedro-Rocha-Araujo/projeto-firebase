@@ -25,7 +25,6 @@ function Home() {
         await signInWithEmailAndPassword(auth, usuario.email, usuario.senha)
         .then(()=>{
             navigate("/admin", {replace: true})
-            alert("Ok!")
         })
         .catch(()=>{
             alert("Erro")
