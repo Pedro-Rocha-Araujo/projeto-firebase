@@ -1,1 +1,2 @@
-# Projeto em React e Firebase 🔥
+# TodoList Firebase 🔥
+### O presente projeto foi desenvolvido em react, e integrado com o Firebase
