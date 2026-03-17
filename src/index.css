@@ -40,7 +40,7 @@ input {
   font-size: clamp(0.9rem, 8vw, 1.08rem);
   height: 2.6rem;
   width: 98%;
-  max-width: 480px;
+  max-width: 580px;
   padding: 2px 0.8rem;
 }
 
@@ -48,7 +48,7 @@ button[type="submit"] {
   font-size: clamp(0.9rem, 8vw, 1.08rem);
   width: 98%;
   height: 2.7rem;
-  max-width: 480px;
+  max-width: 580px;
   background-color: rgb(185, 72, 185);
   color: #fff;
 }
@@ -67,7 +67,7 @@ a:hover {
 div.admin textarea {
   width: 98%;
   min-height: 6rem;
-  max-width: 480px;
+  max-width: 580px;
   padding: 0.6rem 0.8rem;
 }
 
@@ -86,7 +86,7 @@ section {
   gap: 12px;
   background-color: rgba(255, 255, 255, 0.151);
   width: 98%;
-  max-width: 480px;
+  max-width: 580px;
   margin: 2rem auto;
   border-radius: 0.6rem;
   padding: 1rem;
