@@ -1,17 +1,32 @@
 import { useState, useEffect } from "react"
 import { auth, db } from "../../FirebaseConnection"
 import { signOut } from "firebase/auth"
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, onSnapshot, query, orderBy, where } from "firebase/firestore"
 
 function Admin() {
     const [tarefa, setTarefa] = useState("")
     const [user, setUser] = useState({})
+    const [tarefas, setTarefas] = useState([])
 
     useEffect(()=>{
         async function carregarTarefas() {
             const userDetail = localStorage.getItem("@detailUser")
             if(userDetail){
                 setUser(JSON.parse(userDetail))
+                const data = JSON.parse(userDetail)
+                const tarefaRef = collection(db, "tarefas")
+                const q = query(tarefaRef, orderBy("data", "desc"), where("userUid", "==", data?.uid))
+                const onsub = onSnapshot(q, (snapshot)=>{
+                    let lista = []
+                    snapshot.forEach((doc)=>{
+                        lista.push({
+                            id: doc.id,
+                            tarefa: doc.data().tarefa,
+                            userUid: doc.data().userUid
+                        })
+                    })
+                    setTarefas(lista)
+                })
             }
         }
         carregarTarefas()
@@ -56,13 +71,17 @@ function Admin() {
                 <button type="submit">Adicionar</button>
             </form>
             <section>
-                <div className="tarefas">
-                    <p>Tarefa número 1</p>
-                    <div className="botoes">
-                        <button onClick={editarTarefa} className="btn-editar">Editar</button>
-                        <button onClick={deletarTarefa} className="btn-deletar">Deletar</button>
-                    </div>
-                </div>
+                {tarefas.map((_,i)=>{
+                    return(
+                        <div key={i} className="tarefas">
+                            <p>{_.tarefa}</p>
+                            <div className="botoes">
+                                <button onClick={editarTarefa} className="btn-editar">Editar</button>
+                                <button onClick={deletarTarefa} className="btn-deletar">Deletar</button>
+                            </div>
+                        </div>
+                    )
+                })}
             </section>
             <div className="sair">
                 <p onClick={sairConta} className="sair">Sair da conta.</p>
