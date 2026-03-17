@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
 import { auth, db } from "../../FirebaseConnection"
 import { signOut } from "firebase/auth"
-import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc } from "firebase/firestore"
+import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc, updateDoc } from "firebase/firestore"
 
 function Admin() {
     const [tarefa, setTarefa] = useState("")
     const [user, setUser] = useState({})
     const [tarefas, setTarefas] = useState([])
+    const [editando, setEditando] = useState(null)
 
     useEffect(()=>{
         async function carregarTarefas() {
@@ -34,6 +35,10 @@ function Admin() {
 
     async function adcionarTarefa(e) {
         e.preventDefault()
+        if(editando !== null){
+            concluirEdicao()
+            return
+        }
         await addDoc(collection(db, "tarefas"), {
             tarefa: tarefa,
             data: new Date(),
@@ -52,12 +57,29 @@ function Admin() {
         await signOut(auth)
     }
 
-    async function editarTarefa() {
+    async function editarTarefa(_) {
+        setTarefa(_.tarefa)
+        setEditando(_)
     }
 
     async function deletarTarefa(id) {
         const docRef = doc(db, "tarefas", id)
         await deleteDoc(docRef)
+    }
+
+    async function concluirEdicao() {
+        const docRef = doc(db, "tarefas", editando?.id)
+        await updateDoc(docRef, {
+            tarefa: tarefa
+        })
+        .then(()=>{
+            console.log("Tarefa editada!")
+            setTarefa("")
+            setEditando(null)
+        })
+        .catch(()=>{
+            console.log("Erro ao editar!")
+        })
     }
 
     return(
@@ -70,7 +92,7 @@ function Admin() {
                     value={tarefa}
                     required   
                 />
-                <button type="submit">Adicionar</button>
+                <button type="submit">{editando === null? "Adicionar": "Editar"}</button>
             </form>
             <section>
                 {tarefas.map((_,i)=>{
@@ -78,7 +100,7 @@ function Admin() {
                         <div key={i} className="tarefas">
                             <p>{_.tarefa}</p>
                             <div className="botoes">
-                                <button onClick={editarTarefa} className="btn-editar">Editar</button>
+                                <button onClick={()=>editarTarefa(_)} className="btn-editar">Editar</button>
                                 <button onClick={()=>deletarTarefa(_.id)} className="btn-deletar">Deletar</button>
                             </div>
                         </div>
